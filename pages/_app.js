@@ -32,6 +32,19 @@ const correctedTheme = {
             color: 'grey',
             cursor: 'pointer'
         },
+        addButton: {
+            display: 'block',
+            width: '100%',
+            bg: 'whitesmoke',
+            color: 'text',
+            cursor: 'pointer',
+            border: '1px solid black',
+            transitionDuration: '.3s',
+            ':hover': {
+                bg: 'whitesmoke',
+                boxShadow: 'hardShort'
+            }
+        }
     },
     fontWeights: {
         ...preset.fontWeights,
@@ -58,9 +71,6 @@ const correctedTheme = {
                 ':hover': {
                     bg: 'whitesmoke',
                     boxShadow: 'hardShort'
-                },
-                ':target': {
-                    color: 'red'
                 }
             }
         },

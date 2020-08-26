@@ -128,4 +128,27 @@ export const saveNewTaskState = selector({
                 return res;
             })
     }
+});
+
+export const titleFilterState = atom({
+    key: 'titleFilterState',
+    default: ''
+})
+
+export const todoListTitleFilterState = selector({
+    key: 'todoListTitleFilterState',
+    get: ({ get }) => {
+        const title = get(titleFilterState).toLowerCase();
+        const finalList = [];
+        const currentList = get(todoFilterListSelector);
+
+        currentList.forEach((elem) => {
+            const currentTitle = elem.title.toLowerCase();
+            if (currentTitle.includes(title)) {
+                finalList.push(elem);
+            }
+        });
+
+        return finalList;
+    }
 })

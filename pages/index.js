@@ -9,7 +9,8 @@ import { _fetch } from '../components/_fetch';
 import {
   todoListState,
   todoFilterListSelector,
-  apiState
+  apiState,
+  todoListTitleFilterState
 } from '../components/StateManagement';
 import Loader from 'react-loader-spinner';
 
@@ -22,7 +23,7 @@ export default function Main(props) {
 
   const { todoUserAPI } = useRecoilValue(apiState);
   const [defaultList, setDefaultList] = useRecoilState(todoListState);
-  const filteredList = useRecoilValue(todoFilterListSelector);
+  const filteredList = useRecoilValue(todoListTitleFilterState);
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,7 +60,7 @@ export default function Main(props) {
         {(filteredList.length > 0) ?
           filteredList && filteredList.map((elem, key) =>
             <TodoElement element={elem} key={key} />
-          ) : <Text m={3}>Brak zapisanych zadań</Text>
+          ) : <Text m={3}>Brak zadań</Text>
         }
       </Box> : <Box sx={{mx: 'auto', width: '100%', textAlign:'center', paddingTop: '2rem'}}>
         <Loader

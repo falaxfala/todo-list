@@ -32,8 +32,6 @@ export default function TodoElement({ element }) {
     const [isLoadingDelete, setIsLoadingDelete] = useState(false);
     const [isLoadingComplete, setIsLoadingComplete] = useState(false);
 
-    //Link href={{ pathname: '/details', query: { id: id } }} passHref
-
     //Use callback to handle one-shot async action
     //Setting element 'completed' value after response from server
     const todoList = useRecoilValue(todoListState);
@@ -108,22 +106,40 @@ export default function TodoElement({ element }) {
             </Box>
         </Box>
         <Flex width={[2 / 5, 1 / 4, 1 / 4]} variant="todoElemRight">
-            <Button onClick={() => setMeDeleted(id)} title="Usuń" variant="todosActions">
-                <FontAwesomeIcon icon={faMinusCircle} />
+            {!isLoadingDelete ?
+                <Button onClick={() => setMeDeleted(id)} title="Usuń" variant="todosActions">
+                    <FontAwesomeIcon icon={faMinusCircle} />
+                </Button> : <Box sx={{ height: '100%', paddingTop: '22%' }}>
+                    <Loader
+                        type="Oval"
+                        color="#018786"
+                        secondaryColol="#800020"
+                        height={15}
+                        width={15}
+                        visible={isLoadingDelete}
+                    />
+                </Box>}
+
+            <Button variant="todosActions" title="Edytuj zadanie">
+                <Link href={{ pathname: '/details', query: { id: id } }} passHref>
+                    <FontAwesomeIcon icon={faEdit} />
+                </Link>
             </Button>
 
             {!completed ?
                 !isLoadingComplete ?
-                <Button onClick={() => setMeCompleted(id)} color="#018786" title="Oznacz jako ukończone" variant="todosActions">
-                    <FontAwesomeIcon icon={faCheck} />
-                </Button> : <Loader
-                    type="Oval"
-                    color="#018786"
-                    secondaryColol="#800020"
-                    height={15}
-                    width={15}
-                    visible={isLoadingComplete}
-                /> : null}
+                    <Button onClick={() => setMeCompleted(id)} color="#018786" title="Oznacz jako ukończone" variant="todosActions">
+                        <FontAwesomeIcon icon={faCheck} />
+                    </Button> : <Box sx={{ height: '100%', paddingTop: '22%' }}>
+                        <Loader
+                            type="Oval"
+                            color="#018786"
+                            secondaryColol="#800020"
+                            height={15}
+                            width={15}
+                            visible={isLoadingComplete}
+                        />
+                    </Box> : null}
         </Flex>
     </Flex>)
 }
