@@ -12,6 +12,8 @@ import Moment from 'react-moment';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faMinusCircle, faBan, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { setCompleted, setDeleted, todoListState } from './StateManagement';
+import { useState } from 'react';
+import Loader from 'react-loader-spinner';
 
 export default function TodoElement({ element }) {
 
@@ -27,50 +29,61 @@ export default function TodoElement({ element }) {
     const defaultStatus = completed ? 'Ukończone' : 'Nieukończone';
     const statusIcon = completed ? <FontAwesomeIcon color="#018786" icon={faCheck} /> : <FontAwesomeIcon color="#800020" icon={faBan} />;
 
+    const [isLoadingDelete, setIsLoadingDelete] = useState(false);
+    const [isLoadingComplete, setIsLoadingComplete] = useState(false);
+
     //Link href={{ pathname: '/details', query: { id: id } }} passHref
 
     //Use callback to handle one-shot async action
     //Setting element 'completed' value after response from server
     const todoList = useRecoilValue(todoListState);
     const setMeCompleted = useRecoilCallback(({ snapshot, set }) => elemId => {
-        snapshot.getPromise(setCompleted(elemId));
+        setIsLoadingComplete(true);
+        snapshot.getPromise(setCompleted(elemId))
+            .then(() => {
 
-        //Unmutate list state object by making a copy
-        const currentList = [...todoList];
-        let index;
-        //Find index of duplicate with the same id
-        currentList.forEach((elem, i) => {
-            if (elem.id === elemId) {
-                index = i;
-            }
-        });
-        //Copy all values from original and modify 'completed' value
-        let elem = {
-            ...currentList[index],
-            completed: true
-        }
-        //Replace element locally to prevent unwanted data fetching and update list state to rerender view
-        currentList[index] = elem;
-        set(todoListState, currentList);
+                //Unmutate list state object by making a copy
+                const currentList = [...todoList];
+                let index;
+                //Find index of duplicate with the same id
+                currentList.forEach((elem, i) => {
+                    if (elem.id === elemId) {
+                        index = i;
+                    }
+                });
+                //Copy all values from original and modify 'completed' value
+                let elem = {
+                    ...currentList[index],
+                    completed: true
+                }
+
+                setIsLoadingComplete(false);
+                //Replace element locally to prevent unwanted data fetching and update list state to rerender view
+                currentList[index] = elem;
+                set(todoListState, currentList);
+            });
     });
 
     const setMeDeleted = useRecoilCallback(({ snapshot, set }) => elemId => {
-        snapshot.getPromise(setDeleted(elemId));
+        setIsLoadingDelete(true);
+        snapshot.getPromise(setDeleted(elemId))
+            .then(res => {
 
-        //Unmutate list state object by making a copy
-        const currentList = [...todoList];
-        let index;
-        //Find index of duplicate with the same id
-        currentList.forEach((elem, i) => {
-            if (elem.id === elemId) {
-                index = i;
-            }
-        });
-
-        //Splice array to remove item with selected index
-        currentList.splice(index, 1);
-        //Replace element locally to prevent unwanted data fetching and update list state to rerender view
-        set(todoListState, currentList);
+                //Unmutate list state object by making a copy
+                const currentList = [...todoList];
+                let index;
+                //Find index of duplicate with the same id
+                currentList.forEach((elem, i) => {
+                    if (elem.id === elemId) {
+                        index = i;
+                    }
+                });
+                setIsLoadingDelete(false);
+                //Splice array to remove item with selected index
+                currentList.splice(index, 1);
+                //Replace element locally to prevent unwanted data fetching and update list state to rerender view
+                set(todoListState, currentList);
+            });
     });
 
     return (<Flex variant="todoElem" title="Kliknij aby zobaczyć szczegóły">
@@ -87,7 +100,7 @@ export default function TodoElement({ element }) {
                 {defaultStatus} {statusIcon}
             </Text>
 
-            <Box variant="momentDate">
+            <Box variant="tinyTextBottom">
                 Dodano &nbsp;
                 <Moment unix>
                     {new Date(created_at).getTime() / 1000}
@@ -99,11 +112,18 @@ export default function TodoElement({ element }) {
                 <FontAwesomeIcon icon={faMinusCircle} />
             </Button>
 
-            {!completed &&
+            {!completed ?
+                !isLoadingComplete ?
                 <Button onClick={() => setMeCompleted(id)} color="#018786" title="Oznacz jako ukończone" variant="todosActions">
                     <FontAwesomeIcon icon={faCheck} />
-                </Button>
-            }
+                </Button> : <Loader
+                    type="Oval"
+                    color="#018786"
+                    secondaryColol="#800020"
+                    height={15}
+                    width={15}
+                    visible={isLoadingComplete}
+                /> : null}
         </Flex>
     </Flex>)
 }

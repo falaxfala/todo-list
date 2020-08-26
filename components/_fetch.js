@@ -43,7 +43,7 @@ export const _fetch = (options = {}, type = 'gorest') => {
             })
             .catch(error => {
                 return Promise.reject(error);
-            })
+            });
     }
 
     async function post(url, body) {
@@ -58,7 +58,7 @@ export const _fetch = (options = {}, type = 'gorest') => {
             })
             .catch(error => {
                 return Promise.reject(error);
-            })
+            });
     }
 
     async function patch(url, body) {
@@ -73,7 +73,7 @@ export const _fetch = (options = {}, type = 'gorest') => {
             })
             .catch(error => {
                 return Promise.reject(error);
-            })
+            });
     }
 
     async function _delete(url) {
@@ -87,7 +87,7 @@ export const _fetch = (options = {}, type = 'gorest') => {
             })
             .catch(error => {
                 return Promise.reject(error);
-            })
+            });
     }
 
     return {

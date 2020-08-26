@@ -1,10 +1,10 @@
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css"
 import {
     RecoilRoot
 } from 'recoil';
 import { ThemeProvider } from 'emotion-theming';
 import preset from '@rebass/preset';
 
-import moment from 'moment/min/moment-with-locales';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import 'moment/locale/pl';
@@ -43,16 +43,24 @@ const correctedTheme = {
             flexWrap: 'nowrap',
             justifyContent: 'space-between',
             button: {
-                bg: 'white',
+                bg: 'whitesmoke',
                 display: 'block',
                 width: '100%',
                 height: '100%',
                 color: 'text',
                 cursor: 'pointer',
+                borderBottom: '1px solid black',
+                borderRight: '1px solid black',
+                borderTop: '1px solid black',
+                borderTopLeftRadius: '0px',
+                borderBottomLeftRadius: '0px',
                 transitionDuration: '.3s',
                 ':hover': {
                     bg: 'whitesmoke',
                     boxShadow: 'hardShort'
+                },
+                ':target': {
+                    color: 'red'
                 }
             }
         },
@@ -64,7 +72,7 @@ const correctedTheme = {
             position: 'relative',
             cursor: 'pointer'
         },
-        momentDate: {
+        tinyTextBottom: {
             position: 'absolute',
             bottom: '3px',
             color: 'grey',
@@ -74,13 +82,16 @@ const correctedTheme = {
             padding: ['0px 5px', '0px 15px', '0px 15px'],
             flexWrap: 'nowrap',
             justifyContent: ['flex-end', 'space-between', 'space-between']
+        },
+        tinyText: {
+            color: 'grey',
+            fontSize: '12px'
         }
     }
 };
 
 //Define custom AppWrapper to use Context Providers and global props
 function AppWrapper({ Component, pageProps }) {
-    pageProps.todoAPI = 'https://gorest.co.in/public-api/todos';
     return <RecoilRoot>
         <ThemeProvider theme={correctedTheme}>
             <Component {...pageProps} />

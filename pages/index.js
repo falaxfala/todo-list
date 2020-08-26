@@ -1,31 +1,40 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import {
-  atom,
-  selector,
   useRecoilValue,
-  useSetRecoilState,
   useRecoilState
 } from 'recoil';
-import { Box, Flex, Button } from 'rebass';
-import { Textarea } from '@rebass/forms';
+import { Box, Text } from 'rebass';
 import { _fetch } from '../components/_fetch';
-import { todoListState, todoFilterListSelector } from '../components/StateManagement';
+import {
+  todoListState,
+  todoFilterListSelector,
+  apiState
+} from '../components/StateManagement';
+import Loader from 'react-loader-spinner';
 
 const TodoElement = dynamic(() => import('../components/TodoElement'));
 const Filter = dynamic(() => import('../components/Filter'));
 const Stats = dynamic(() => import('../components/Stats'));
+const AddNewTask = dynamic(() => import('../components/AddNewTask'));
 
 export default function Main(props) {
 
+  const { todoUserAPI } = useRecoilValue(apiState);
   const [defaultList, setDefaultList] = useRecoilState(todoListState);
   const filteredList = useRecoilValue(todoFilterListSelector);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const loadFromAPI = async () => {
-      await _fetch().get(props.todoAPI)
+      if (defaultList.length === 0) {
+        setIsLoading(true);
+      }
+      await _fetch().get(todoUserAPI)
         .then(res => {
           setDefaultList(res.data);
+          setIsLoading(false);
           return res;
         });
     }
@@ -40,36 +49,27 @@ export default function Main(props) {
       mx: 'auto',
       px: 3,
     }}>
-    <Flex mb={4} mt={2} variant="newTaskBox">
-      <Box width={[3 / 5, 3 / 4, 3 / 4]}>
-        <Textarea
-          id='newTaskTitle'
-          name='newTaskTitle'
-          variant='newTaskTitle'
-          placeholder='Treść zadania'
-          sx={{
-            resize: 'none',
-            fontFamily: 'body'
-          }}
-        />
-      </Box>
 
-      <Box width={[2 / 5, 1 / 4, 1 / 4]}>
-        <Button>
-          Zapisz zadanie
-        </Button>
-      </Box>
-    </Flex>
-
+    <AddNewTask />
     <Filter />
-
     <Stats />
 
-    <Box variant='card'>
-      {filteredList && filteredList.map((elem, key) =>
-        <TodoElement element={elem} key={key} />
-      )}
-    </Box>
+    {!isLoading ?
+      <Box variant="card">
+        {(filteredList.length > 0) ?
+          filteredList && filteredList.map((elem, key) =>
+            <TodoElement element={elem} key={key} />
+          ) : <Text m={3}>Brak zapisanych zadań</Text>
+        }
+      </Box> : <Box sx={{mx: 'auto', width: '100%', textAlign:'center', paddingTop: '2rem'}}>
+        <Loader
+          type="Oval"
+          color="#018786"
+          secondaryColol="#800020"
+          height={60}
+          width={60}
+        />
+      </Box>}
 
   </Box>);
 }

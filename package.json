@@ -20,6 +20,7 @@
     "next": "9.3.5",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-loader-spinner": "^3.1.14",
     "react-moment": "^0.9.7",
     "rebass": "^4.0.7",
     "recoil": "^0.0.10",
