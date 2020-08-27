@@ -3,12 +3,18 @@
 Mini projekt wykonany w celach rekrutacji.
 
 ## Użyte komponenty
-Recoil - State management
-Rebass - komponenty ui, theming
+Recoil - State management 
+
+Rebass - komponenty ui, theming 
+
 NextJS - SSR
+
 ReactMoment - formatowanie dat
+
 fetch API - zapytania
+
 gorest - gotowe API do zarządzania zadaniami
+
 
 ## UWAGI
 -_fetch() - to nakładka do standardowego fetchAPI, która rozróżnia typy zapytań i przesyła token w nagłówku. Nie wczytywałem się specjalnie w politykę zabezpieczeń gorestapi, dlatego nie jestem pewny, czy mój własny klucz, który umieściłem na sztywno w pliku * */components/_fetch.js* * będzie działał poprawnie cały czas
