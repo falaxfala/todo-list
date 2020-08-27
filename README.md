@@ -22,7 +22,7 @@ gorest - gotowe API do zarządzania zadaniami
 -Lokalnie zapisuję id użytkownika (localstorage). Oprócz api todos użyłem api users, żeby ograniczyć liczbę zapytań.
 W przeciwnym wypadku nie było widać efektów usuwania, czy dodawania, gdyż taski ginęły w zalewie danych. Jako, że użytkownicy resetują się sami po jakimś czasie, byłem zmuszony zabezpieczyć się rejestracją konta, do którego będą przypisane taski.
 
--Komentarze są w języku angielskim (prawdopodobnie nie idealne :P ).
+-Komentarze są w języku angielskim (prawdopodobnie nie idealne :stuck_out_tongue: ).
 
 -Jako, że pierwszy raz używałem Rebassa, to nie mam pewności co do poprawności jego użycia. Pobrałem domyślny theme, a następnie go rozszerzyłem w pliku * */pages/_app.js* * 
 
