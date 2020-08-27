@@ -90,11 +90,27 @@ export const _fetch = (options = {}, type = 'gorest') => {
             });
     }
 
+    async function put(url, body) {
+        return await fetch(url, {
+            ...options,
+            method: 'PUT',
+            body: JSON.stringify(body)
+        })
+            .then(res => res.json())
+            .then(res => {
+                return Promise.resolve(res);
+            })
+            .catch(error => {
+                return Promise.reject(error);
+            });
+    }
+
     return {
         get,
         post,
         patch,
-        _delete
+        _delete,
+        put
     };
 }
 

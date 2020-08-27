@@ -2,7 +2,8 @@ import { Flex, Box, Text, Button } from 'rebass';
 import { Textarea } from '@rebass/forms';
 import { newTaskCharCountState, newTaskState, saveNewTaskState, todoListState } from './StateManagement';
 import { useRecoilValue, useRecoilState, useRecoilCallback } from 'recoil';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function AddNewTask(props) {
 
@@ -11,6 +12,12 @@ export default function AddNewTask(props) {
     const { charCount, limit } = useRecoilValue(newTaskCharCountState);
     const [isLoading, setIsLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
+    const router = useRouter();
+
+    //Reset value on component loading
+    useEffect(() => {
+        setTitle('');
+    }, []);
 
     //Handle changing input to state
     const handleInput = (event) => {
@@ -22,10 +29,14 @@ export default function AddNewTask(props) {
         setIsLoading(true);
         return snapshot.getPromise(saveNewTaskState)
             .then(res => {
-                const currentList = [...todoList];
-                currentList.push(res.data);
-                set(todoListState, currentList);
-                return res;
+                if (res.code !== 422) {
+                    const currentList = [...todoList];
+                    currentList.push(res.data);
+                    set(todoListState, currentList);
+                    return res;
+                } else {
+                    router.push('/AddUser');
+                }
             })
             .catch(error => {
                 alert(error);
@@ -68,9 +79,9 @@ export default function AddNewTask(props) {
                 </Box>
 
                 <Box width={[2 / 5, 1 / 4, 1 / 4]}>
-                    <Button 
-                    disabled={isLoading}
-                     onClick={tryToSave}>
+                    <Button
+                        disabled={isLoading}
+                        onClick={tryToSave}>
                         {isLoading ? 'Zapisuję...' : 'Zapisz zadanie'}
                     </Button>
                 </Box>

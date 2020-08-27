@@ -6,13 +6,15 @@ import {
 } from 'recoil';
 import { _fetch } from './_fetch';
 
-const userID = 1610; //ID of user created in gorest API for limit response data
-const todoUserAPI = 'https://gorest.co.in/public-api/users/' + userID + '/todos/';
-const todoBaseApi = 'https://gorest.co.in/public-api/todos/';
 
 export const apiState = atom({
     key: 'apiState',
-    default: { todoUserAPI, todoBaseApi, userID }
+    default: {
+        userID: '',
+        todoUserApi: '',
+        todoBaseApi: 'https://gorest.co.in/public-api/todos/',
+        userBaseApi: 'https://gorest.co.in/public-api/users/'
+    }
 });
 
 export const todoListState = atom({
@@ -78,6 +80,24 @@ export const setCompleted = selectorFamily({
     }
 });
 
+export const setUncompleted = selectorFamily({
+    key: 'setUncompleted',
+    get: id => async ({ get }) => {
+        const { todoBaseApi } = get(apiState);
+        return await _fetch().patch(todoBaseApi + id, {
+            completed: false
+        })
+            .then(res => {
+                if (res.code === 200) {
+                    return res;
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+});
+
 export const setDeleted = selectorFamily({
     key: 'setDeleted',
     get: id => async ({ get }) => {
@@ -125,15 +145,18 @@ export const saveNewTaskState = selector({
         return await _fetch().post(todoBaseApi, bodyObject)
             .then(res => {
                 console.log(res);
+                if (res.code != 201) {
+                    alert("Coś poszło nie tak! Niezdefiniowany użytkownik.");
+                }
                 return res;
-            })
+            });
     }
 });
 
 export const titleFilterState = atom({
     key: 'titleFilterState',
     default: ''
-})
+});
 
 export const todoListTitleFilterState = selector({
     key: 'todoListTitleFilterState',
@@ -141,6 +164,7 @@ export const todoListTitleFilterState = selector({
         const title = get(titleFilterState).toLowerCase();
         const finalList = [];
         const currentList = get(todoFilterListSelector);
+
 
         currentList.forEach((elem) => {
             const currentTitle = elem.title.toLowerCase();
@@ -151,4 +175,18 @@ export const todoListTitleFilterState = selector({
 
         return finalList;
     }
-})
+});
+
+export const saveChanges = selectorFamily({
+    key: 'saveChanges',
+    get: elemData => async ({ get }) => {
+        const { todoBaseApi } = get(apiState);
+        return await _fetch().put(todoBaseApi + elemData.id, elemData)
+            .then(res => {
+               return res;
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+});

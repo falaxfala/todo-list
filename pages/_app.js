@@ -11,7 +11,7 @@ import 'moment/locale/pl';
 
 //Moment settings
 Moment.globlLocale = 'pl';
-Moment.globalFormat = 'dd - DD.MM.Y, H:m';
+Moment.globalFormat = 'dd - DD.MM.Y, H:mm';
 Moment.globalTimezone = 'Europe/Warsaw';
 Moment.globalLocal = true;
 
@@ -42,6 +42,14 @@ const correctedTheme = {
             transitionDuration: '.3s',
             ':hover': {
                 bg: 'whitesmoke',
+                boxShadow: 'hardShort'
+            }
+        },
+        smallButton: {
+            fontSize: '12px',
+            cursor: 'pointer',
+            transitionDuration: '.3s',
+            ':hover': {
                 boxShadow: 'hardShort'
             }
         }
@@ -96,6 +104,13 @@ const correctedTheme = {
         tinyText: {
             color: 'grey',
             fontSize: '12px'
+        },
+        infoFrame: {
+            fontSize: '14px',
+            border: '1px solid black',
+            padding: '12px',
+            borderRadius: '4px',
+            bg: 'whitesmoke'
         }
     }
 };
